@@ -68,7 +68,6 @@
     {{#each flags}}
     <div id="{{id}}" class="row result-block">
       <div id="table-{{id}}" class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-
       </div>
     </div>
     {{/each}}
@@ -79,7 +78,7 @@
     <table id="table-{{result.id}}" class="table table-striped table-bordered">
     <thead>
       <td>Id</td>
-      <td>Component</td>
+      <td>Component<br>( Product )</td>
       <td>Summary</td>
       <td>Status</td>
       <td>Assigned to</td>
@@ -88,7 +87,7 @@
     {{#each result.data}}
       <tr>
         <td><a href="https://bugzilla.mozilla.org/show_bug.cgi?id={{id}}">{{id}}</a></td>
-        <td>{{component}}</td>
+        <td>{{component}}<br>( {{product}} )</td>
         <td>{{summary}}</td>
         <td>{{status}}</td>
         <td>{{assigned_to.name}}</td>
