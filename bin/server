@@ -1,0 +1,11 @@
+var connect = require('connect'),
+    path = require('path'),
+    serveStatic = require('serve-static'),
+    PORT = process.env.PORT || 8000,
+    server = connect();
+
+var wwwroot = path.join(__dirname, '../public');
+
+server.use(serveStatic(wwwroot)).listen(PORT, function() {
+  console.log("listening on  port", PORT);
+});
