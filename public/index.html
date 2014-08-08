@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Firefox Devtools Planning / Status</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- data tables -->
+    <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/plug-ins/725b2a2115b/integration/bootstrap/3/dataTables.bootstrap.css">
+
+    <style type="text/css">
+    body { padding-top: 70px; }
+    .result-block {
+      padding-top: 70px;
+    }
+    </style>
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="container">
+
+      <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+        <div class="container">
+          <ul id="top-nav" class="nav navbar-nav" id="fixed-nav"></ul>
+        </div>
+      </nav>
+
+      <div class="row">
+        <div id="results-container" class="col-xs-12 col-sm-12 col-md-12 col-lg-12"></div>
+      </div>
+    </div>
+
+    <!-- base deps -->
+    <script src="//code.jquery.com/jquery.js"></script>
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+
+    <!-- app deps -->
+    <script src="js/underscore-min.js"></script>
+    <script src="js/async.js"></script>
+    <script src="js/handlebars-v1.3.0.js"></script>
+    <script src="js/bz.js"></script>
+    <script src="//cdn.datatables.net/1.10.2/js/jquery.dataTables.min.js"></script>
+    <script src="//cdn.datatables.net/plug-ins/725b2a2115b/integration/bootstrap/3/dataTables.bootstrap.js"></script>
+    <script src="js/app.js"></script>
+    
+
+    <!-- live reload stuff, DO NOT DEPLOY -->
+    <script>document.write('<script src="http://' + (location.host || 'localhost').split(':')[0] + ':35729/livereload.js?snipver=1"></' + 'script>')</script>
+
+    <!-- template -->
+    <script id="flag-list-tpl" type="text/x-handlebars-template">
+    {{#each flags}}
+    <li><a href="#{{id}}">{{label}}</a></li>
+    {{/each}}
+    </script>
+
+
+    <script id="result-containers-tpl" type="text/x-handlebars-template">
+    {{#each flags}}
+    <div id="{{id}}" class="row result-block">
+      <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+      <h3><a>{{label}}</a></h3>
+      <table id="table-{{id}}" class="table table-striped table-bordered">
+      </table>
+      </div>
+    </div>
+    {{/each}}
+    </script>    
+
+
+    <script id="flag-block-tpl" type="text/x-handlebars-template">
+    <thead>
+      <td>Id</td>
+      <td>Component</td>
+      <td>Summary</td>
+      <td>Status</td>
+      <td>Assigned to</td>
+    </thead>
+    <tbody>
+    {{#each result.data}}
+      <tr>
+        <td><a href="https://bugzilla.mozilla.org/show_bug.cgi?id={{id}}">{{id}}</a></td>
+        <td>{{component}}</td>
+        <td>{{summary}}</td>
+        <td>{{status}}</td>
+        <td>{{assigned_to.name}}</td>
+      </tr>
+    {{/each}}
+    </tbody>
+    </script>
+  </body>
+</html>
