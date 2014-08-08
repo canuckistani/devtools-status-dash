@@ -64,21 +64,19 @@
     {{/each}}
     </script>
 
-
     <script id="result-containers-tpl" type="text/x-handlebars-template">
     {{#each flags}}
     <div id="{{id}}" class="row result-block">
-      <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-      <h3><a>{{label}}</a></h3>
-      <table id="table-{{id}}" class="table table-striped table-bordered">
-      </table>
+      <div id="table-{{id}}" class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+
       </div>
     </div>
     {{/each}}
     </script>    
 
-
     <script id="flag-block-tpl" type="text/x-handlebars-template">
+    <h3><a>{{result.label}}</a></h3>
+    <table id="table-{{result.id}}" class="table table-striped table-bordered">
     <thead>
       <td>Id</td>
       <td>Component</td>
@@ -97,6 +95,7 @@
       </tr>
     {{/each}}
     </tbody>
+    </table>
     </script>
   </body>
 </html>
