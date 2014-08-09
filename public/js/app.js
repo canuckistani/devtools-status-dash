@@ -92,12 +92,11 @@ function fetch(id, label, callback) {
   bugzilla.searchBugs(_tmp, function(e, r) {
     if (e) throw e;
     result = {data: r, label: label, id: id};
-    renderTable(result);
+    renderTable(result, function() {
+      $('#'+id+' table').dataTable();
+      // callback(result.id);
+    });
   });
-}
-
-function setSelected(id, value) {
-  var list = $('#'+id).get();
 }
 
 function deriveIdFromLabel(label) {
@@ -109,4 +108,5 @@ function renderTable(result, callback) {
   var table_tpl = Handlebars.compile(flags_block_tpl);
   var table = table_tpl({result: result});
   $('#'+result.id).html(table);
+  callback(result.id);
 }
