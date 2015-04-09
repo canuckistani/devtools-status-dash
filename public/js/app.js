@@ -1,64 +1,25 @@
 var queryTpl = {
-  "product": ["Firefox", "Add-on SDK"],
-  "include_fields": "id, product, component, summary, status, assigned_to",
+  "product": ["Firefox"],
+  "include_fields": "id, component, summary, status, assigned_to, whiteboard, priority",
   "order": "bug_id"
 };
 
 var flags = {
-  "statusbacklog": {
-    "label": "Backlog",
-    "flag": "[status:backlog]",
-    "id": "statusbacklog"
-  },
-  "statusplanned": {
-    "label": "Planned",
-    "flag": "[status:planned]",
-    "id": "statusplanned"
-  },
-  "statusinflight": {
-    "label": "In Flight",
-    "flag": "[status:inflight]",
-    "id": "statusinflight"
-  },
-  "statuslandedoff": {
-    "label": "Landed - preffed off",
-    "flag": "[status:landedoff]",
-    "id": "statuslandedoff"
-  },
-  "statuslandedon": {
-    "label": "Landed - preffed on",
-    "flag": "[status:landedon]",
-    "id": "statuslandedon"
-  },
-  "statusshipped": {
-    "label": "Shipped",
-    "flag": "[status:shipped]",
-    "id": "statusshipped"
-  },
-  "statusonhold": {
-    "label": "On Hold",
-    "flag": "[status:onhold]",
-    "id": "statusonhold"
+  "devEdition40": {
+    "label": "DevEdition-40",
+    "flag": "devedition-40",
+    "id": "devedition-40"
   }
-};
+}
 
 $(function() {
-
-  renderNav();
-
-  renderContainers(function() {
-    $('.result-block').html("<h3>Loading...<h3>");
-  });
-
-  var functions = _.map(flags, function(flag) {
-    return function(callback) {
-      fetch(flag.id, flag.label);
-    };
-  });
-
-  async.parallel(functions, function(e, r) {
-    console.log(r);
-    console.log("all finished");
+  async.series([
+      function(callback) {
+        $('#results-container').html("<h3>Loading...<h3>");
+        callback(null);
+      }
+    ], function() {
+    fetch(flags.devEdition40, renderTable);
   });
 });
 
@@ -72,30 +33,41 @@ function renderNav(current) {
   $('body').scrollspy({ target: '#top-nav' });
 }
 
-function renderContainers(callback) {
+function renderContainers(groups, callback) {
   var results_tpl = $('#result-containers-tpl').html();
   var results_block = Handlebars.compile(results_tpl);
-  var _rendered = results_block({flags: flags});
+  var _rendered = results_block({groups: groups});
   $('#results-container').html(_rendered);
   if (callback) {
-    callback();
+    callback(null);
   }
 }
 
-function fetch(id, label, callback) {
+function fetch(flag, callback) {
   flags_block_tpl = $('#flag-block-tpl').html();
-  var flag = flags[id];
-
   _tmp = queryTpl;
   _tmp.whiteboard = flag.flag;
 
   bugzilla.searchBugs(_tmp, function(e, r) {
     if (e) throw e;
-    result = {data: r, label: label, id: id};
-    renderTable(result, function() {
-      $('#'+id+' table').dataTable();
-      // callback(result.id);
+    result = {data: r, label: flag.label, id: flag.id};
+
+    renderTable(result, 'results-container', function() {
+      console.log("BOOM");
     });
+    // var grouped = _.groupBy(result.data, 'priority');
+    // console.log("grouped", grouped);
+    // // callback(null, result);
+    // var functions = _.map(grouped, function(list, prio) {
+    //   return function(callback) {
+    //     renderTable(list, prio.toLowerCase(), callback);
+    //   }
+    // });
+
+    // async.parallel(functions, function(err, result) {
+    //   if (err) throw err;
+    //   console.log("got here");
+    // })
   });
 }
 
@@ -103,10 +75,9 @@ function deriveIdFromLabel(label) {
   return label.toLowerCase().replace(/\s/g, '-');
 }
 
-function renderTable(result, callback) {
-  console.log(result);
+function renderTable(result, id, callback) {
   var table_tpl = Handlebars.compile(flags_block_tpl);
   var table = table_tpl({result: result});
-  $('#'+result.id).html(table);
-  callback(result.id);
+  $('#'+id).html(table);
+  if (callback) { callback(null) }
 }
